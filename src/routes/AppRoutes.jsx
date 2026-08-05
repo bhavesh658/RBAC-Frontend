@@ -12,10 +12,10 @@ import UserDetail from "../pages/users/UserDetail";
 import DepartmentDetail from "../pages/departments/DepartmentDetail";
 import Project from "../pages/Projects/Projects";
 import Tasks from "../pages/Tasks/Tasks";
-import Leads from "../pages/leads/Leads";
+import Leads from "../pages/Leads/Leads";
 import Activities from "../pages/activityLogs/ActivityLogs";
 import UserReport from "../pages/reports/UserReport";
-import Reports from "../pages/reports/Reports"; // Naya List component
+import Reports from "../pages/reports/Reports";
 
 function AppRoutes() {
   return (
