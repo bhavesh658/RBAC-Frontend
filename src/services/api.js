@@ -1,12 +1,9 @@
 import axios from 'axios';
 
-// Axios ka instance banayein
 const api = axios.create({
   
-  baseURL: 'https://rbac-system-444w.onrender.com/api/v1', 
-  
+  baseURL: import.meta.env.VITE_API_BASE_URL, 
   withCredentials: true, 
-  
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
