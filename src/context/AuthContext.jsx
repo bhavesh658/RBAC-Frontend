@@ -10,7 +10,9 @@ export function AuthProvider({ children }) {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  const [loading, setLoading] = useState(!localStorage.getItem("user_profile"));
+  // FIX: Loading ko humesha true se start karein taaki jab tak checkAuth 
+  // complete na ho jaye, tab tak spinner dikhe.
+  const [loading, setLoading] = useState(true); 
 
   const savePermissions = (userData) => {
     if (userData?.role?.permissions) {
@@ -28,18 +30,21 @@ export function AuthProvider({ children }) {
         setUser(userData);
         localStorage.setItem("user_profile", JSON.stringify(userData));
         savePermissions(userData);
+        return true; // FIX: Success return karein
       } else {
         throw new Error("SILENT_LOGOUT");
       }
     } catch (error) {
       if (error?.response?.status !== 401 && error?.message !== "SILENT_LOGOUT") {
         console.error("Auth check failed:", error);
-        toast.error("Session expired or authentication failed. Please log in again.");
+        // FIX: Toast bar-bar na aaye isliye usko thoda handle kiya
+        // toast.error("Session expired or authentication failed. Please log in again."); 
       }
 
       setUser(null);
       localStorage.removeItem("user_profile");
       localStorage.removeItem("user_permissions");
+      return false; // FIX: Failure return karein
     } finally {
       setLoading(false);
     }
@@ -50,16 +55,18 @@ export function AuthProvider({ children }) {
       const response = await loginApi(payload);
 
       if (response?.success) {
-        await checkAuth();
+        // FIX: CheckAuth ka result wait karein
+        const isAuthSuccess = await checkAuth(); 
+        
+        if (!isAuthSuccess) {
+          throw new Error("Authentication verification failed after login.");
+        }
       }
-
       return response;
     } catch (error) {
       console.error("Login service error:", error);
-
-      const errorMsg = error?.response?.data?.message || "Invalid credentials or server error. Please try again.";
+      const errorMsg = error?.response?.data?.message || error?.message || "Invalid credentials or server error. Please try again.";
       toast.error(errorMsg);
-
       throw error;
     }
   };

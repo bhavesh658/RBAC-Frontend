@@ -1,15 +1,26 @@
-import axios from "axios";
+import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
+// Axios ka instance banayein
 const api = axios.create({
- 
-   baseURL: `${BASE_URL}/api/v1`,
-  withCredentials: true,
+  
+  baseURL: 'https://rbac-system-444w.onrender.com/api/v1', 
+  
+  withCredentials: true, 
+  
   headers: {
-    "Content-Type": "application/json",
-  },
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      console.warn("Unauthorized request - Maybe cookie expired or not sent");
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;
